@@ -1,328 +1,84 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>七夕节快乐</title>
-  <link rel="icon" type="image/x-icon" href="爱情.png" />
-  <style>
-    :root{
-      --ui-gap: min(6vw, 28px);
-    }
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: "微软雅黑", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Hiragino Sans GB", sans-serif;
-      color: #fff;
-      background: rgba(0,5,24,1);
-    }
-    /* 全屏画布（高分屏在JS里适配） */
-    #cas {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      display: block;
-      touch-action: none;
-      background: radial-gradient(1600px 800px at 70% -10%, rgba(40,60,120,.35), transparent 60%) rgba(0,5,24,1);
-    }
 
-    /* 月亮与城市 */
-    #moon {
-      position: fixed;
-      width: 12vw;
-      max-width: 120px;
-      top: 4vh;
-      right: 4vw;
-      z-index: 120;
-      opacity: .9;
-      filter: drop-shadow(0 4px 22px rgba(255,255,210,.3));
-      user-select: none;
-      -webkit-user-drag: none;
-    }
-    .city {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      z-index: 100;
-      pointer-events: none;
-    }
-    .city img {
-      width: 100%;
-      height: auto;
-      display: block;
-      user-select: none;
-      -webkit-user-drag: none;
-    }
+    <title>七夕节快乐</title>
+    <meta name="language" content="zh-CN">
+    <link rel="icon" type="image/x-icon" href="爱情.png">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
 
-    /* 顶部问候内容 */
-    .page_one {
-      position: fixed;
-      inset: 0;
-      display: grid;
-      grid-template-rows: 1fr auto;
-      z-index: 200;
-      pointer-events: none; /* 让点击穿透到按钮以外区域 */
-    }
-    .content {
-      width: min(86vw, 560px);
-      margin: 8vh auto 0;
-      text-align: center;
-      pointer-events: auto;
-      backdrop-filter: blur(2px);
-    }
-    .text_wrapper{
-      display: inline-flex;
-      align-items: center;
-      gap: var(--ui-gap);
-      padding: min(3.5vw, 16px) min(4.5vw, 22px);
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-    }
-    .corner-img{
-      width: 16vw;
-      max-width: 110px;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,.35);
-      user-select: none;
-      -webkit-user-drag: none;
-    }
-    .text{
-      font-size: clamp(18px, 3.6vw, 26px);
-      line-height: 1.35;
-      letter-spacing: .02em;
-      text-shadow: 0 2px 12px rgba(0,0,0,.5);
-      white-space: pre-wrap;
-    }
+        .city {
+            width: 100%;
+            position: fixed;
+            bottom:
+                0px;
+            z-index: 100;
+        }
 
-    /* 按钮组：固定在底部上方，居中 */
-    .btn-groups{
-      position: fixed;
-      left: 0; right: 0;
-      bottom: 10vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--ui-gap);
-      z-index: 220;
-      pointer-events: auto;
-      padding: 0 4vw;
-    }
-    .btn{
-      padding: 12px 22px;
-      border-radius: 999px;
-      cursor: pointer;
-      user-select: none;
-      font-size: clamp(14px, 3.2vw, 18px);
-      letter-spacing: .02em;
-      border: 1px solid rgba(255,255,255,.22);
-      box-shadow: 0 10px 28px rgba(255,0,120,.18);
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
-      backdrop-filter: blur(4px);
-    }
-    .btn-a{
-      background: linear-gradient(180deg, rgba(255,100,170,.75), rgba(255,60,140,.7));
-    }
-    .btn-b{
-      background: linear-gradient(180deg, rgba(90,110,255,.65), rgba(60,80,230,.62));
-    }
-    .btn:hover{ transform: translateY(-2px) scale(1.03); }
-    .btn:active{ transform: translateY(0) scale(.98); }
+        .city img {
+            width: 100%;
+        }
 
-    /* “还行吧” 逃跑时用到的固定定位样式（JS切换） */
-    .runaway {
-      position: fixed !important;
-    }
-
-    /* 隐藏的分享图占位（可选） */
-    .share_img{ display:none; }
-
-    /* 隐藏 audio 控件 */
-    audio{ display:none; }
-  </style>
+        audio {
+            opacity: 0;
+        }
+    </style>
+    <title>
+        放烟花
+    </title>
+    <link href="modal.css" rel="stylesheet" />
 </head>
+
 <body onselectstart="return false">
+    <!--对话部分-->
+    <div class="share_img"><img src="a8b.png" alt=""></div>
 
-  <!-- 问候与按钮 -->
-  <div class="page_one">
-    <div class="content">
-      <div class="text_wrapper">
-        <img src="1756436186949.jpg" alt="love" class="corner-img">
-        <div class="text" id="greetText">宝宝~七夕节快乐呀~</div>
-      </div>
+    <div class="page_one">
+        <div class="content">
+            <div class="text_wrapper">
+                <img src="1756436186949.jpg" alt="" class="corner-img" >
+                <div class="text">
+                    宝宝~七夕节快乐呀~
+                </div>
+            </div>
+        </div>
+        <div class="btn-groups">
+            <div class="heart-btn">
+                <div id="yes" class="btn btn-a"><span>嗯快乐~</span></div>
+            </div>
+            <div id="no" class="btn btn-b"><span>还行吧</span></div>
+        </div>
     </div>
-
-    <div class="btn-groups" id="btnBar">
-      <div id="yes" class="btn btn-a"><span>嗯快乐~</span></div>
-      <div id="no" class="btn btn-b"><span>还行吧</span></div>
+    <!--烟花部分-->
+    <canvas id='cas' style="background-color:rgba(0,5,24,1)">
+        浏览器不支持canvas
+    </canvas>
+    <div class="city">
+        <img src="city.png" alt="" />
     </div>
-  </div>
+    <img src="moon.png" alt="" id="moon" style="visibility: hidden;" />
+    <div style="display:none">
+        <div class="shape">
+            Lucy
+        </div>
+        <div class="shape">
+            七夕节快乐
+        </div>
+    </div>
+    <!--音乐部分-->
+    <audio autoplay loop id="music">
+        <source src="music.mp3" />
+    </audio>
+    <iframe id="iframMusic" allow="autoplay" style="display:none" src="blank.mp3"></iframe>
+    <script src="jquery.min.js"></script>
+    <script src="fire.js"></script>
+    <script src="talk.js"></script>
+</body>
 
-  <!-- 烟花画布 -->
-  <canvas id="cas">您的浏览器不支持 Canvas</canvas>
-
-  <!-- 城市与月亮 -->
-  <div class="city"><img src="city.png" alt="city silhouette"></div>
-  <img src="moon.png" alt="moon" id="moon" style="visibility: visible;">
-
-  <!-- 背景音乐 -->
-  <audio id="music" preload="auto" loop>
-    <source src="music.mp3" type="audio/mpeg">
-  </audio>
-
-  <script>
-    // ========= 音频处理：在用户首次交互时播放 =========
-    const music = document.getElementById('music');
-    let musicTried = false;
-    function tryPlayMusic() {
-      if (musicTried) return;
-      musicTried = true;
-      music.volume = 0.9;
-      music.play().catch(()=>{ /* 有的设备仍需后续交互触发 */ });
-    }
-    ['pointerdown','touchstart','click','keydown'].forEach(ev=>{
-      window.addEventListener(ev, tryPlayMusic, { once:false, passive:true });
-    });
-
-    // ========= 画布与高分屏适配 =========
-    const canvas = document.getElementById('cas');
-    const ctx = canvas.getContext('2d');
-
-    function resizeCanvas() {
-      const dpr = Math.max(1, window.devicePixelRatio || 1);
-      const rect = canvas.getBoundingClientRect();
-      canvas.width  = Math.round(rect.width  * dpr);
-      canvas.height = Math.round(rect.height * dpr);
-      ctx.setTransform(1,0,0,1,0,0); // 重置
-      ctx.scale(dpr, dpr);           // 让后续绘制用CSS像素坐标
-    }
-    // 让CSS上就是全屏
-    function fillViewport() {
-      // 已在CSS占满 viewport，这里只需做像素缩放
-      resizeCanvas();
-    }
-    window.addEventListener('resize', fillViewport);
-    fillViewport();
-
-    // ========= 简易烟花引擎（点击/自动） =========
-    const GRAVITY = 0.06;
-    const FRICTION = 0.996;
-    const colors = ['#FF5C93','#FFD166','#73FBD3','#60A5FA','#C084FC','#F472B6','#FCA5A5','#34D399'];
-
-    class Particle {
-      constructor(x,y, speed, angle, life, color, size=3) {
-        this.x = x; this.y = y;
-        this.vx = Math.cos(angle)*speed;
-        this.vy = Math.sin(angle)*speed;
-        this.life = life;
-        this.alpha = 1;
-        this.color = color;
-        this.size = size;
-      }
-      update() {
-        this.vx *= FRICTION;
-        this.vy *= FRICTION;
-        this.vy += GRAVITY;
-        this.x += this.vx;
-        this.y += this.vy;
-        this.life -= 1;
-        this.alpha = Math.max(0, this.life/60);
-      }
-      draw(ctx) {
-        if (this.alpha <= 0) return;
-        ctx.globalAlpha = Math.max(0.05, this.alpha);
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
-        ctx.fillStyle = this.color;
-        ctx.fill();
-        ctx.globalAlpha = 1;
-      }
-    }
-
-    const particles = [];
-    function burst(x,y, count=48, baseSpeed=4.2, spread=Math.PI*2, size=3) {
-      const c = colors[Math.floor(Math.random()*colors.length)];
-      for (let i=0;i<count;i++) {
-        const angle = (i/count)*spread + Math.random()*0.12;
-        const speed = baseSpeed * (0.7 + Math.random()*0.9);
-        const life = 50 + Math.random()*40;
-        particles.push(new Particle(x,y, speed, angle, life, c, size));
-      }
-    }
-    function ring(x,y, count=60, radius=0.8, size=2.4) {
-      const c = colors[Math.floor(Math.random()*colors.length)];
-      for (let i=0;i<count;i++){
-        const angle = (i/count)*Math.PI*2;
-        const speed = 2.8 + Math.random()*1.5;
-        const px = x + Math.cos(angle)*radius;
-        const py = y + Math.sin(angle)*radius;
-        particles.push(new Particle(px,py, speed, angle, 55+Math.random()*35, c, size));
-      }
-    }
-
-    // 自动随机烟花
-    let autoTimer = 0;
-    function autoFireworks(dt){
-      autoTimer += dt;
-      if (autoTimer > 700 + Math.random()*900){
-        autoTimer = 0;
-        const w = canvas.clientWidth;
-        const h = canvas.clientHeight;
-        const x = 80 + Math.random()*(w-160);
-        const y = 80 + Math.random()*(h*0.55);
-        Math.random() < 0.3 ? ring(x,y) : burst(x,y);
-      }
-    }
-
-    // 点击生成烟花（支持触摸）
-    function clientToCanvas(e){
-      const rect = canvas.getBoundingClientRect();
-      let cx, cy;
-      if (e.touches && e.touches[0]){
-        cx = e.touches[0].clientX; cy = e.touches[0].clientY;
-      } else {
-        cx = e.clientX; cy = e.clientY;
-      }
-      return { x: cx - rect.left, y: cy - rect.top };
-    }
-    function handleTap(e){
-      tryPlayMusic();
-      const p = clientToCanvas(e);
-      burst(p.x, p.y, 64, 5.2, Math.PI*2, 3.2);
-    }
-    canvas.addEventListener('pointerdown', handleTap, {passive:true});
-    canvas.addEventListener('touchstart', handleTap, {passive:true});
-
-    // 动画循环
-    let last = performance.now();
-    function loop(now){
-      const dt = now - last; last = now;
-      // 清屏（轻微拖影更梦幻）
-      ctx.fillStyle = 'rgba(0,0,0,0.22)';
-      ctx.fillRect(0,0, canvas.clientWidth, canvas.clientHeight);
-
-      // 自动烟花
-      autoFireworks(dt);
-
-      // 更新与绘制
-      for (let i=particles.length-1; i>=0; i--){
-        const p = particles[i];
-        p.update();
-        p.draw(ctx);
-        if (p.life <= 0 || p.y > canvas.clientHeight + 80) particles.splice(i,1);
-      }
-      requestAnimationFrame(loop);
-    }
-    requestAnimationFrame(loop);
-
-    // ========= 按钮交互逻辑 =========
-    const greetText = document.getElementById('greetText');
-    const btnYes = document.getElementById('yes');
-    const btnNo  = document.getElementById('no');
-    const btnBar = document.getElementById('btnBar
+</html>
